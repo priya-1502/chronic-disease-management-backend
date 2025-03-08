@@ -2,19 +2,21 @@ const Registration = require("../models/registrationModel");
 const { JWT } = require("../utilities/jwt");
 
 const registrationService = {
-  login: (username, password, res) => {
+  login: (req, res) => {
+    var { username, password } = req.body;
     if (username && password) {
-      Registration.findOne({ email: username, password: password }).then(
-        (response) => {
-          if (response) {
-            let token = JWT.createToken(response);
+      Registration.findOne(
+        { email: username, password: password },
+        { firstName: 1, lastName: 1, email: 1, role: 1 }
+      ).then((response) => {
+        if (response) {
+          let token = JWT.createToken(response);
 
-            res.status(200).send({ token, response });
-          } else {
-            res.status(500).send("Invalid username or password");
-          }
+          res.status(200).send({ token, response });
+        } else {
+          res.status(500).send("Invalid username or password");
         }
-      );
+      });
     } else {
     }
   },
@@ -31,7 +33,7 @@ const registrationService = {
   fetch: (id, res) => {
     Registration.findById({ _id: id }).then((response) => {
       if (response) {
-        res.status(200).send({response});
+        res.status(200).send({ response });
       } else {
         res.status(500).send("user not found");
       }

@@ -5,7 +5,7 @@ const metricseSchema = new mongoose.Schema({
   bloodPressure: { type: String, required: true },
   weight: { type: String, required: true },
   height: { type: Number },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "registration" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "Registrations" },
   createdAt: { type: Date, default: new Date() },
 });
 

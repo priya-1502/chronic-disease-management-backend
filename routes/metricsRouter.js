@@ -1,16 +1,14 @@
 const express = require("express");
-const { registrationService } = require("../services/registrationService");
-const Registration = require("../models/registrationModel");
 const Metrics = require("../models/metricsModel");
 const { JWT } = require("../utilities/jwt");
-const mongoose = require("mongoose");
-const { ObjectId } = require('mongoose').Types;
+const { ObjectId } = require("mongoose").Types;
 
 const router = new express.Router();
 
 router.get("/:userId", (req, res) => {
   var userId = req.params.userId;
   Metrics.findOne({ userId: new ObjectId(userId) })
+    .populate("userId", { firstName: 1, lastName: 1 })
     .then((response) => {
       res.status(200).send(response);
     })
