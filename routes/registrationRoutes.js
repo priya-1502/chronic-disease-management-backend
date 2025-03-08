@@ -13,5 +13,9 @@ router.post('/create',(req,res)=>{
     let result = registrationService.create(req,res)
 })
 
+router.get('/user',(req,res)=>{
+    var {id} = req.params.id
+    let result = registrationService.fetch(id,res)
+})
 
 module.exports = router

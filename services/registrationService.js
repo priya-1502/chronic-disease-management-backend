@@ -27,6 +27,17 @@ const registrationService = {
       res.status(500).json({ message: "Server Error" });
     }
   },
+  fetch:(id,res)=>{
+        Registration.findById({_id:id})
+        .then((response)=>{
+            if(response){
+                res.status(200).send("user data get successfully")
+            } else {
+                res.status(500).send("user not found")
+            }
+        })
+
+  }
 };
 
 module.exports ={registrationService}
