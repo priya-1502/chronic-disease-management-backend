@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-const metricseSchema = new mongoose.Schema({
+const metricsSchema = new mongoose.Schema({
+  heartBeatRate:{ type: String},
+  temperature:{ type: String},
   bloodsugarLevel: { type: String, required: true },
   bloodPressure: { type: String, required: true },
   weight: { type: String, required: true },
@@ -9,6 +11,6 @@ const metricseSchema = new mongoose.Schema({
   createdAt: { type: Date, default: new Date() },
 });
 
-const Matrices = mongoose.model("metricseSchema", metricseSchema);
+const Matrics = mongoose.model("metricsSchema", metricsSchema);
 
-module.exports = Matrices;
+module.exports = Matrics;

@@ -2,41 +2,46 @@ const Registration = require("../models/registrationModel");
 const { JWT } = require("../utilities/jwt");
 
 const registrationService = {
-  login: (req, res) => {
-    var { username, password } = req.body;
-    if (username && password) {
-      Registration.findOne(
-        { email: username, password: password },
-        { firstName: 1, lastName: 1, email: 1, role: 1 }
-      ).then((response) => {
+  login: (req) => {
+    return new Promise((resolve, reject) => {
+      var { username, password } = req.body;
+      if (username && password) {
+        Registration.findOne(
+          { email: username, password: password },
+          { firstName: 1, lastName: 1, email: 1, role: 1 }
+        ).then((response) => {
+          if (response) {
+            let token = JWT.createToken(response);
+            resolve({ token, response });
+          } else {
+            reject("Invalid username or password");
+          }
+        });
+      } else {
+        reject("Username / Password is required");
+      }
+    });
+  },
+  create: async (bodyData) => {
+    return new Promise((resolve, reject) => {
+      Registration.create(bodyData)
+        .then((response) => {
+          resolve("User created successfully");
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+  fetch: (id) => {
+    return new Promise((resolve, reject) => {
+      Registration.findById({ _id: id }).then((response) => {
         if (response) {
-          let token = JWT.createToken(response);
-
-          res.status(200).send({ token, response });
+          resolve(response);
         } else {
-          res.status(500).send("Invalid username or password");
+          reject("user not found");
         }
       });
-    } else {
-    }
-  },
-  create: async (req, res) => {
-    try {
-      const RegistrationData = new Registration(req.body);
-      await RegistrationData.save();
-      res.status(200).json(RegistrationData);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server Error" });
-    }
-  },
-  fetch: (id, res) => {
-    Registration.findById({ _id: id }).then((response) => {
-      if (response) {
-        res.status(200).send({ response });
-      } else {
-        res.status(500).send("user not found");
-      }
     });
   },
 };

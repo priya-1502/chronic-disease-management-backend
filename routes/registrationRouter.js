@@ -2,22 +2,45 @@ const express = require("express");
 const { registrationService } = require("../services/registrationService");
 const { JWT } = require("../utilities/jwt");
 
-const router = new express.Router()
+const router = new express.Router();
 
-router.get('/:id',(req,res)=>{
-    console.log(req.params.id)
-    var id = req.params.id
-    let result = registrationService.fetch(id,res)
-})
+router.get("/:id", JWT.authorize, (req, res) => {
+  var id = req.params.id;
+  if (id) {
+    registrationService
+      .fetch(id)
+      .then((response) => {
+        res.status(200).send({ response });
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  } else {
+    res.status(500).send("Id is required");
+  }
+});
 
-router.post('/login',(req,res)=>{
-    let result = registrationService.login(req,res)
-})
+router.post("/login", (req, res) => {
+  registrationService
+    .login(req)
+    .then((response) => {
+      res.status(200).send({ response });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
 
-router.post('/create',(req,res)=>{
-    console.log(req.body)
-    let result = registrationService.create(req,res)
-})
+router.post("/create", (req, res) => {
+  var bodyData = req.body;
+  registrationService
+    .create(bodyData)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
 
-
-module.exports = router
+module.exports = router;
