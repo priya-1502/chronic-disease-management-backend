@@ -1,16 +1,21 @@
 const jwt = require("jsonwebtoken");
 
- class JWT{
-    static createToken(userPayload){
-        return jwt.sign(userPayload,process.env.SECRET_KEY,{expiresIn:'10h'})
+class JWT {
+  static createToken(userPayload) {
+    return jwt.sign(userPayload, process.env.SECRET_KEY, { expiresIn: "10h" });
+  }
+  static async authorize(req,res,next) {
+    var { token } = req.cookies;
+    if(token){
+        const result = jwt.verify(token, process.env.SECRET_KEY);
+        if (result) {
+          next()
+        }
+        res.status(500).send("Invalid token")
+    } else{
+        res.status(500).send("Token not found")
     }
-    static async authorize(token){
-       const result = jwt.verify(token,process.env.SECRET_KEY)
-       if(result){
-        return true
-       }
-       return false
-    }
+  }
 }
 
-module.exports = {JWT}
+module.exports = { JWT };

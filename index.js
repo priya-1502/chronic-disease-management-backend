@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 // import mongoose from 'mongoose'
 // import dotenv from 'dotenv'
 // import bodyParser from 'body-parser'
@@ -16,6 +17,8 @@ const port = process.env.PORT || 3001
 const connection_URL = process.env.DB_CONNECTION_STRING
 app.use(cors())
 app.use(bodyParser.json())
+app.use(cookieParser())
+
 app.use((req,res,next)=>{
     console.log(new Date())
     next()
