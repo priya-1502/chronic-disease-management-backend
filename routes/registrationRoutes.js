@@ -4,12 +4,13 @@ const { registrationService } = require("../services/registrationService");
 const router = new express.Router()
 
 router.get('/login',(req,res)=>{
-    var bodyData = req.body
+    var {username,password} = req.body
+    let result = registrationService.login(username,password,res)
 })
 
-router.get('/create',(req,res)=>{
+router.post('/create',(req,res)=>{
     console.log(req.body)
-    registrationService.create(req)
+    let result = registrationService.create(req,res)
 })
 
 

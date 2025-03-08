@@ -1,7 +1,23 @@
 const Registration = require("../models/registrationModel");
+const { JWT } = require("../utilities/jwt");
 
 const registrationService = {
-  create: async () => {
+    login:(username,password,res)=>{
+        if(username && password){
+            Registration.findOne({email : username,password:password })
+            .then((response)=>{
+                if(response){
+                    let token = JWT.createToken(response)
+                    res.status(200).send(token)
+                } else {
+                    res.status(500).send("Invalid username or password")
+                }
+            })
+        } else {
+
+        }
+    },
+  create: async (req,res) => {
     try {
       const RegistrationData = new Registration(req.body);
       await RegistrationData.save();
@@ -13,4 +29,4 @@ const registrationService = {
   },
 };
 
-module.exports =registrationService
+module.exports ={registrationService}
