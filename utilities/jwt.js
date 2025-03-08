@@ -1,3 +1,14 @@
+import jwt from "jsonwebtoken";
+
 export class JWT{
-    static 
+    static createToken(userPayload){
+        return jwt.sign(userPayload,process.env.SECRET_KEY,{expiresIn:'10h'})
+    }
+    static async authorize(token){
+       const result = jwt.verify(token,process.env.SECRET_KEY)
+       if(result){
+        return true
+       }
+       return false
+    }
 }

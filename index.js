@@ -1,6 +1,12 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
+const  express = require('express')
+const dotenv = require('dotenv')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+// import mongoose from 'mongoose'
+// import dotenv from 'dotenv'
+// import bodyParser from 'body-parser'
+// import cors from 'cors'
 
 dotenv.config()
 
@@ -8,7 +14,14 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 3001
 const connection_URL = process.env.DB_CONNECTION_STRING
+app.use(cors())
+app.use(bodyParser.json())
+app.use((req,res,next)=>{
+    console.log(new Date())
+    next()
+})
 
+require('./routes/config')(app)
 
 mongoose.connect(connection_URL).then((res)=>console.log("DB Connected")).catch((err)=>console.log(err))
 
